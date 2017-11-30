@@ -1,5 +1,5 @@
 <?php
-include_once 'FolderCreator.php';
+include_once "C:\\Users\\biel_\\Ebook\\DRM_Social\\Book Modifier\\BookWriter.php";
 
 class Zipper{
     private $actFolder = null,
@@ -24,6 +24,10 @@ class Zipper{
 
     }
 
+    public function getExtractedFolder(){
+        return $this->unZippedFolder;
+    }
+
     private function unZipFile(){
         $zip = new ZipArchive;
         $zip->open($this->zippedFile);
@@ -31,14 +35,50 @@ class Zipper{
         $zip->close();
 
     }
-    //TERMINAR A CLASSE DE ZIPPAR
-    private function zipFile($rootPath){
-        $rootPath = realpath($rootPath);
+
+    public function zipFile($newFolder){
         $zip = new ZipArchive;
-        $zip->open(pathinfo($this->zippedFile, BASENAME), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        if($zip->open($newFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME). '.zip', ZipArchive::CREATE)===TRUE)
+            $this->addFolderToZip($newFolder, $zip, '');
+
+        $zip->close();
+
+        if (!file_exists('Complete Books'))
+            mkdir('Complete Books', '0777');
+        $folderCreator = new FolderCreator();
+        $newPath = $folderCreator->getNewFolder('Complete Books', 'book');
+
+        rename($newFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_BASENAME),
+            $newPath . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME) . '.epub');
+    }
+
+    private function addFolderToZip($dir, $zipArchive, $zipdir = ''){
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                //Add the directory
+                if(!empty($zipdir))
+                    $zipArchive->addEmptyDir($zipdir);
+
+                // Loop through all the files
+                while (($file = readdir($dh)) !== false) {
+                    //If it's a folder, run the function again!
+                    if(!is_file($dir . '\\' .$file)){
+                        // Skip parent and root directories
+                        if(($file !== ".") && ($file !== ".."))
+                            $this->addFolderToZip(
+                                empty($dir) ? $file : $dir . '\\' . $file
+                                , $zipArchive,
+                                empty($zipdir) ? $file : $zipdir . '\\' . $file);
 
 
-
+                    }else
+                        // Add the files
+                        $zipArchive->addFile(
+                            empty($dir) ? $file : $dir . '\\' . $file,
+                            empty($zipdir) ? $file : $zipdir .'\\'. $file);
+                }
+            }
+        }
     }
 
     public function getUnzippedFolder(){
