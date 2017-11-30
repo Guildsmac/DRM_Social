@@ -1,4 +1,7 @@
 <?php
+
+//CLASSE PRINCIPAL PARA SER INSTANCIADA E ENTÃO USADA PARA INSERIR A DRM NOS LIVROS
+
 include_once "Book Modifier\\BookReader.php"; //CAMINHO PARA A CLASSE BOOKREADER
 include_once "Book Modifier\\BookWriter.php"; //CAMINHO PARA A CLASSE BOOKWRITER
 include_once "Auxiliary Classes\\Zipper.php"; //CAMINHO PARA A CLASSE ZIPPER
@@ -6,7 +9,11 @@ include_once "Auxiliary Classes\\FolderCleaner.php"; //CAMINHO PARA A CLASSE FOL
 
 class DRMApplicator{
 
-    public function insert($bookPath, $htmlFooter, $cssFooter, $destinyPath){
+    public function insert($bookPath     //Diretório onde o arquivo .epub está localizado
+                           , $htmlFooter //Diretório onde o arquivo do rodapé em HTML está localizado
+                           , $cssFooter  //Diretório onde o arquivo do rodapé em CSS está localizado
+                           , $destinyPath//Diretório onde os livros finais devem ser armazenados(Só uma pasta principal)
+                          ){
 
         $zipper = new Zipper($bookPath);
         $bookReader = new BookReader();
