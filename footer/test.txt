@@ -1,0 +1,12 @@
+<footer class="waterMarkDRM"> Nome: Gabriel <br> CPF: 609.xxx.xxx-xx <br> Email: Guildsmac@gmail.com </footer>
+.waterMarkDRM{
+	flex-shrink: 0;
+	opacity: 0.3;
+	padding: 20px;
+	text-align: center;
+	margin: 0;
+	font: 20px Sans-Seif;
+	background: #0000cc;
+	color: #e68a00;
+	
+}
