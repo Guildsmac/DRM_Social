@@ -1,6 +1,6 @@
 <?php
 class BookModifier{
-
+    //TEST
     public function insert($path, $htmlFooterPath, $cssFooterPath){
         if(pathinfo($path, PATHINFO_EXTENSION)=='html' ||
            pathinfo($path, PATHINFO_EXTENSION)=='xhtml') {
