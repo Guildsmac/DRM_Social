@@ -21,6 +21,7 @@ class Zipper{
         $this->unZippedFolder = $this->actFolder . '\\' . 'extractedFiles';
         mkdir($this->unZippedFolder, 0777);
         $this->unZipFile();
+        $this->zipFile();
 
     }
 
@@ -31,14 +32,47 @@ class Zipper{
         $zip->close();
 
     }
-    //TERMINAR A CLASSE DE ZIPPAR
-    private function zipFile($rootPath){
-        $rootPath = realpath($rootPath);
+    //TERMINAR A FUNÇÃO DE ZIPPAR
+    private function zipFile(){
         $zip = new ZipArchive;
-        $zip->open(pathinfo($this->zippedFile, BASENAME), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        if($zip->open($this->unZippedFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME). '.zip', ZipArchive::CREATE)===TRUE)
+            $this->addFolderToZip($this->unZippedFolder, $zip, '');
+
+        echo "numFile:" . $zip->numFiles . "\n";
+        $zip->close();
+    }
+
+    private function addFolderToZip($dir, $zipArchive, $zipdir = ''){
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                //Add the directory
+                if(!empty($zipdir))
+                    $zipArchive->addEmptyDir($zipdir);
+
+                // Loop through all the files
+                while (($file = readdir($dh)) !== false) {
+                    //If it's a folder, run the function again!
+                    if(!is_file($dir . '\\' .$file)){
+                        // Skip parent and root directories
+                        if(($file !== ".") && ($file !== ".."))
+                            $this->addFolderToZip(
+                                empty($dir) ? $file : $dir . '\\' . $file
+                                , $zipArchive,
+                                empty($zipdir) ? $file : $zipdir . '\\' . $file);
 
 
+                    }else
+                        // Add the files
+                        $zipArchive->addFile(
+                            empty($dir) ? $file : $dir . '\\' . $file,
+                            empty($zipdir) ? $file : $zipdir .'\\'. $file);
+                }
+            }
+        }
+    }
 
+    private function echoTest(){
+        echo '<br>TEST<br>';
     }
 
     public function getUnzippedFolder(){
