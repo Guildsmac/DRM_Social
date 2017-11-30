@@ -11,7 +11,7 @@ class BookReader{
 
     }
 
-    public function setPath($path){
+    private function setPath($path){
         if(!$this->isPathValid($path))
             return false;
         $this->bookPath = $path;
@@ -19,7 +19,7 @@ class BookReader{
 
     }
 
-    public function setPathList(){
+    private function setPathList(){
         $this->dealDirectory($this->bookPath);
 
     }

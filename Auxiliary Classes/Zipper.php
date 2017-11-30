@@ -1,5 +1,5 @@
 <?php
-include_once 'FolderCreator.php';
+include_once "C:\\Users\\biel_\\Ebook\\DRM_Social\\Book Modifier\\BookWriter.php";
 
 class Zipper{
     private $actFolder = null,
@@ -21,8 +21,11 @@ class Zipper{
         $this->unZippedFolder = $this->actFolder . '\\' . 'extractedFiles';
         mkdir($this->unZippedFolder, 0777);
         $this->unZipFile();
-        $this->zipFile();
 
+    }
+
+    public function getExtractedFolder(){
+        return $this->unZippedFolder;
     }
 
     private function unZipFile(){
@@ -32,14 +35,21 @@ class Zipper{
         $zip->close();
 
     }
-    //TERMINAR A FUNÇÃO DE ZIPPAR
-    private function zipFile(){
-        $zip = new ZipArchive;
-        if($zip->open($this->unZippedFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME). '.zip', ZipArchive::CREATE)===TRUE)
-            $this->addFolderToZip($this->unZippedFolder, $zip, '');
 
-        echo "numFile:" . $zip->numFiles . "\n";
+    public function zipFile($newFolder){
+        $zip = new ZipArchive;
+        if($zip->open($newFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME). '.zip', ZipArchive::CREATE)===TRUE)
+            $this->addFolderToZip($newFolder, $zip, '');
+
         $zip->close();
+
+        if (!file_exists('Complete Books'))
+            mkdir('Complete Books', '0777');
+        $folderCreator = new FolderCreator();
+        $newPath = $folderCreator->getNewFolder('Complete Books', 'book');
+
+        rename($newFolder . '\\' . pathinfo($this->zippedFile, PATHINFO_BASENAME),
+            $newPath . '\\' . pathinfo($this->zippedFile, PATHINFO_FILENAME) . '.epub');
     }
 
     private function addFolderToZip($dir, $zipArchive, $zipdir = ''){
@@ -69,10 +79,6 @@ class Zipper{
                 }
             }
         }
-    }
-
-    private function echoTest(){
-        echo '<br>TEST<br>';
     }
 
     public function getUnzippedFolder(){
