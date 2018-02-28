@@ -2,10 +2,10 @@
 
 //CLASSE PRINCIPAL PARA SER INSTANCIADA E ENTÃO USADA PARA INSERIR A DRM NOS LIVROS
 
-include_once "Book Modifier\\BookReader.php"; //CAMINHO PARA A CLASSE BOOKREADER
-include_once "Book Modifier\\BookWriter.php"; //CAMINHO PARA A CLASSE BOOKWRITER
-include_once "Auxiliary Classes\\Zipper.php"; //CAMINHO PARA A CLASSE ZIPPER
-include_once "Auxiliary Classes\\FolderCleaner.php"; //CAMINHO PARA A CLASSE FOLDER CLEANER
+include_once "C:\\Users\\Guildsmac\\PhpstormProjects\\DRM Social\\Book Modifier\\BookReader.php"; //CAMINHO PARA A CLASSE BOOKREADER
+include_once "C:\\Users\\Guildsmac\\PhpstormProjects\\DRM Social\\Book Modifier\\BookWriter.php"; //CAMINHO PARA A CLASSE BOOKWRITER
+include_once "C:\\Users\\Guildsmac\\PhpstormProjects\\DRM Social\\Auxiliary Classes\\Zipper.php"; //CAMINHO PARA A CLASSE ZIPPER
+include_once "C:\\Users\\Guildsmac\\PhpstormProjects\\DRM Social\\Auxiliary Classes\\FolderCleaner.php"; //CAMINHO PARA A CLASSE FOLDER CLEANER
 
 class DRMApplicator{
 
@@ -21,9 +21,6 @@ class DRMApplicator{
         $bookWriter = new BookWriter($destinyPath);
         $bookWriter->modifyBook($bookReader, $htmlFooter, $cssFooter);
         $zipper->zipFile($bookWriter->getNewFolderPath());
-        new FolderCleaner("temp");
-        new FolderCleaner("tempBook");
-
 
     }
 

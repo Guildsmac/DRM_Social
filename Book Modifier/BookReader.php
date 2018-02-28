@@ -2,6 +2,7 @@
 
 class BookReader{
     private $pathList = array();
+    private $needCSS = array();
     private $bookPath;
 
     private function isPathValid($path){
@@ -21,7 +22,6 @@ class BookReader{
 
     private function setPathList(){
         $this->dealDirectory($this->bookPath);
-
     }
 
     public function readBook($path){
@@ -35,10 +35,30 @@ class BookReader{
             if(!$i->isDot()){
                 if($i->isDir())
                     $this->dealDirectory($i->getPathName());
-                else
+                else {
                     $this->pathList[] = $i->getPathName();
+                    if(!$this->hasOcurrence($this->needCSS, substr($i->getPathName(), 0, strrpos($i->getPathName(), '\\'))))
+                        $this->needCSS[] = substr($i->getPathName(), 0, strrpos($i->getPathName(), '\\'));
+                }
             }
         }
+    }
+
+    private function hasOcurrence($array, $comp){
+        foreach($array as $i){
+            if($i==$comp)
+                return true;
+
+        }
+        return false;
+    }
+
+    public function addPathList($path){
+        $this->pathList[] = $path;
+    }
+
+    public function getNeedCSS(){
+        return $this->needCSS;
     }
 
     public function getPathList(){
